@@ -89,6 +89,10 @@ func TestDecimalV1(t *testing.T) {
 			CalcDecimal([]float64{0.0231, 0.21}, `/`),
 			0.11,
 		},
+		"mod": []float64{
+			CalcDecimal([]float64{20, 3}, `%`),
+			2,
+		},
 	}
 
 	for k, v := range checkN {

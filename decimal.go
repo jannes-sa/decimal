@@ -1046,6 +1046,8 @@ func CalcDecimal(n []float64, operator string) (fl float64) {
 				calc = calc.Mul(NewFromFloat(v))
 			} else if operator == `/` {
 				calc = calc.Div(NewFromFloat(v))
+			} else if operator == "%" {
+				calc = calc.Mod(NewFromFloat(v))
 			}
 		}
 
