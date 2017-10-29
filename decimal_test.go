@@ -72,23 +72,28 @@ func TestDecimalV1(t *testing.T) {
 	b := 0.07
 	c := 0.07
 
-	varCheck := map[string]float64{
-		"add": 0.21,
-		"sub": 0.11,
-		"mul": 0.0231,
-		"div": 0.11,
+	checkN := map[string][]float64{
+		"add": []float64{
+			CalcDecimal([]float64{a, b, c}, `+`), // calculated value
+			0.21, // expected value
+		},
+		"sub": []float64{
+			CalcDecimal([]float64{0.21, 0.1}, `-`),
+			0.11,
+		},
+		"mul": []float64{
+			CalcDecimal([]float64{0.11, 0.21}, `*`),
+			0.0231,
+		},
+		"div": []float64{
+			CalcDecimal([]float64{0.0231, 0.21}, `/`),
+			0.11,
+		},
 	}
 
-	capCheck := map[string]float64{
-		"add": CalcDecimal([]float64{a, b, c}, `+`),
-		"sub": CalcDecimal([]float64{varCheck["add"], 0.1}, `-`),
-		"mul": CalcDecimal([]float64{varCheck["sub"], varCheck["add"]}, `*`),
-		"div": CalcDecimal([]float64{varCheck["mul"], varCheck["add"]}, `/`),
-	}
-
-	for k, v := range capCheck {
-		if v != varCheck[k] {
-			t.Fatalf("%v Value Incorrect %v Should Be %v", k, v, varCheck[k])
+	for k, v := range checkN {
+		if v[0] != v[1] {
+			t.Fatalf("%v Value Incorrect %v Should Be %v", k, v[0], v[1])
 		}
 	}
 
@@ -100,13 +105,19 @@ func TestCalcNested(t *testing.T) {
 	c := 0.07
 	shouldVal := 0.0105
 
-	val := CalcDecimal([]float64{
+	n1 := CalcDecimal([]float64{
 		CalcDecimal([]float64{a, b, c}, `+`),
 		0.05,
 	}, `*`)
 
-	if val != shouldVal {
-		t.Fatalf("Value is %v Should Be %v", val, shouldVal)
+	n2 := CalcDecimal([]float64{a, 3, 0.05}, `*`)
+
+	if n1 != shouldVal {
+		t.Fatalf("Value is %v Should Be %v", n1, shouldVal)
+	}
+
+	if n2 != shouldVal {
+		t.Fatalf("Value is %v Should Be %v", n2, shouldVal)
 	}
 }
 
