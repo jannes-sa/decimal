@@ -67,6 +67,49 @@ func init() {
 	}
 }
 
+func TestDecimalV1(t *testing.T) {
+	a := 0.07
+	b := 0.07
+	c := 0.07
+
+	varCheck := map[string]float64{
+		"add": 0.21,
+		"sub": 0.11,
+		"mul": 0.0231,
+		"div": 0.11,
+	}
+
+	capCheck := map[string]float64{
+		"add": CalcDecimal([]float64{a, b, c}, `+`),
+		"sub": CalcDecimal([]float64{varCheck["add"], 0.1}, `-`),
+		"mul": CalcDecimal([]float64{varCheck["sub"], varCheck["add"]}, `*`),
+		"div": CalcDecimal([]float64{varCheck["mul"], varCheck["add"]}, `/`),
+	}
+
+	for k, v := range capCheck {
+		if v != varCheck[k] {
+			t.Fatalf("%v Value Incorrect %v Should Be %v", k, v, varCheck[k])
+		}
+	}
+
+}
+
+func TestCalcNested(t *testing.T) {
+	a := 0.07
+	b := 0.07
+	c := 0.07
+	shouldVal := 0.0105
+
+	val := CalcDecimal([]float64{
+		CalcDecimal([]float64{a, b, c}, `+`),
+		0.05,
+	}, `*`)
+
+	if val != shouldVal {
+		t.Fatalf("Value is %v Should Be %v", val, shouldVal)
+	}
+}
+
 func TestNewFromFloat(t *testing.T) {
 	for f, s := range testTable {
 		d := NewFromFloat(f)
