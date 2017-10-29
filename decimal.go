@@ -1033,11 +1033,11 @@ func (d NullDecimal) MarshalJSON() ([]byte, error) {
 }
 
 // CalcDecimal implement array calculation
-func CalcDecimal(val []float64, operator string) (fl float64) {
+func CalcDecimal(n []float64, operator string) (fl float64) {
 	fl = 0
-	if len(val) > 0 {
-		calc := NewFromFloat(val[0])
-		for _, v := range val[1:] {
+	if len(n) > 0 {
+		calc := NewFromFloat(n[0])
+		for _, v := range n[1:] {
 			if operator == `+` {
 				calc = calc.Add(NewFromFloat(v))
 			} else if operator == `-` {
